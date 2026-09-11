@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ackermann_vehicle">
+    <xacro:property name="wheel_separation" value="0.17"/>
+    <gazebo>
+        <plugin name="gz::sim::systems::AckermannSteering" filename="gz-sim-ackermann-steering-system">
+            <left_joint>rear_left_wheel_joint</left_joint>
+            <right_joint>rear_right_wheel_joint</right_joint>
+
+            <left_steering_joint>front_left_steering_joint</left_steering_joint>
+            <right_steering_joint>front_right_steering_joint</right_steering_joint>
+
+            <!-- <min_velocity>0.0</min_velocity>
+            <max_velocity>1.0</max_velocity>
+            <min_acceleration>-1.0</min_acceleration>
+            <max_acceleration>1.0</max_acceleration>
+             -->
+
+            <wheel_separation>${wheel_separation}</wheel_separation>
+            <kingpin_width>${wheel_separation * 0.8}</kingpin_width>
+            <wheel_base>0.25</wheel_base>
+            <wheel_radius>0.033</wheel_radius>
+            <!-- <wheel_torque>5</wheel_torque> -->
+            <steering_limit>0.5</steering_limit>
+            <topic>cmd_vel</topic>
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_footprint</child_frame_id>
+            <odom_publish_frequency>50</odom_publish_frequency>
+        </plugin>
+
+        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+            <render_engine>ogre2</render_engine>
+        </plugin>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+        </plugin>
+
+        <plugin name="gz::sim::systems::JointStatePublisher" filename="gz-sim-joint-state-publisher-system">
+            <topic>joint_states</topic>
+            <joint_name>rear_left_wheel_joint</joint_name>
+            <joint_name>rear_right_wheel_joint</joint_name>
+            <joint_name>front_left_wheel_joint</joint_name>
+            <joint_name>front_right_wheel_joint</joint_name>
+            <joint_name>front_left_steering_joint</joint_name>
+            <joint_name>front_right_steering_joint</joint_name>
+        </plugin>
+    </gazebo>
+
+
+    <!-- See with the sdformat if each sensor is correctly configured. The topics are set to the default values, but they can be changed if needed. -->
+    <gazebo reference="front_csi">
+        <sensor name="camera" type="camera">
+            <always_on>true</always_on>
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+            <topic>front_camera/image_raw</topic>
+            <gz_frame_id>front_csi</gz_frame_id>
+            <pose>0 0 0 1.5707963 -1.5707963 0</pose>
+            <camera>
+                <horizontal_fov>1.047</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>10</far>
+                </clip>
+            </camera>
+            <noise>
+            <!-- Gaussian is the simplest and most universally supported, 0.007 stddev support 1.8-255 gray levels of sensor noise-->
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.007</stddev>
+            </noise>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="rear_csi">
+        <sensor name="rear_camera" type="camera">
+            <always_on>true</always_on>
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+            <topic>rear_camera/image_raw</topic>
+            <gz_frame_id>rear_csi</gz_frame_id>
+            <pose>0 0 0 1.5707963 -1.5707963 0</pose>
+            <camera>
+                <horizontal_fov>1.047</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>10</far>
+                </clip>
+            </camera>
+            <noise>
+            <!-- Gaussian is the simplest and most universally supported, 0.007 stddev support 1.8-255 gray levels of sensor noise-->
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.007</stddev>
+            </noise>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="left_csi">
+        <sensor name="left_camera" type="camera">
+            <always_on>true</always_on>
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+            <topic>left_camera/image_raw</topic>
+            <gz_frame_id>left_csi</gz_frame_id>
+            <pose>0 0 0 1.5707963 -1.5707963 0</pose>
+            <camera>
+                <horizontal_fov>1.047</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>10</far>
+                </clip>
+            </camera>
+            <noise>
+            <!-- Gaussian is the simplest and most universally supported, 0.007 stddev support 1.8-255 gray levels of sensor noise-->
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.007</stddev>
+            </noise>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="right_csi">
+        <sensor name="right_camera" type="camera">
+            <always_on>true</always_on>
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+            <topic>right_camera/image_raw</topic>
+            <gz_frame_id>right_csi</gz_frame_id>
+            <pose>0 0 0 1.5707963 -1.5707963 0</pose>
+            <camera>
+                <horizontal_fov>1.047</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.05</near>
+                    <far>10</far>
+                </clip>
+            </camera>
+            <noise>
+            <!-- Gaussian is the simplest and most universally supported, 0.007 stddev support 1.8-255 gray levels of sensor noise-->
+                <type>gaussian</type>
+                <mean>0.0</mean>
+                <stddev>0.007</stddev>
+            </noise>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="realsense_rear">
+        <sensor name="realsense_camera" type="rgbd_camera">
+            <always_on>true</always_on>
+            <update_rate>30</update_rate>
+            <visualize>true</visualize>
+            <topic>realsense</topic>
+            <gz_frame_id>realsense_rear</gz_frame_id>
+            <pose>0 0 0 1.5707963 -1.5707963 0</pose>
+            <camera>
+                <horizontal_fov>1.211</horizontal_fov>
+                <image>
+                    <width>1280</width>
+                    <height>720</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.1</near>
+                    <far>300</far>
+                </clip>
+            </camera>
+            <depth_camera>
+                <clip>
+                    <near>0.1</near>
+                    <far>15</far>
+                </clip>
+            </depth_camera>
+            <noise>
+            <!-- gaussian quantized is the more realistic for rgbd where the real hardware has fixed range resolution -->
+                <type>gaussian_quantized</type>
+                <mean>0.0</mean>
+                <stddev>0.01</stddev>
+                <precision>0.001</precision>
+            </noise>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="lidar">
+        <sensor name="lidar" type="gpu_lidar">
+            <always_on>true</always_on>
+            <update_rate>10</update_rate>
+            <visualize>true</visualize>
+            <topic>scan</topic>
+            <gz_frame_id>lidar</gz_frame_id>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14159</min_angle>
+                        <max_angle>3.14159</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.12</min>
+                    <max>22.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+            </lidar>
+            <noise>
+            <!-- gaussian quantized is the more realistic for lidar where the real hardware has fixed range resolution -->
+                <type>gaussian_quantized</type>
+                <mean>0.0</mean>
+                <stddev>0.01</stddev>
+                <precision>0.01</precision>
+            </noise>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="IMU">
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>100</update_rate>
+            <topic>imu</topic>
+            <gz_frame_id>IMU</gz_frame_id>
+            <imu>
+                <angular_velocity>
+                <!-- matches low-cost Micro electro-mechanical system gyroscope noise density -->
+                    <x><noise type="gaussian"><mean>0.0</mean><stddev>0.0003</stddev></noise></x>
+                    <y><noise type="gaussian"><mean>0.0</mean><stddev>0.0003</stddev></noise></y>
+                    <z><noise type="gaussian"><mean>0.0</mean><stddev>0.0003</stddev></noise></z>
+                </angular_velocity>
+                <linear_acceleration>
+                <!-- matches low-cost Micro electro-mechanical system gyroscope accel -->
+                    <x><noise type="gaussian"><mean>0.0</mean><stddev>0.017</stddev></noise></x>
+                    <y><noise type="gaussian"><mean>0.0</mean><stddev>0.017</stddev></noise></y>
+                    <z><noise type="gaussian"><mean>0.0</mean><stddev>0.017</stddev></noise></z>
+                </linear_acceleration>
+            </imu>
+        </sensor>
+    </gazebo>
+</robot>
