@@ -1,8 +1,8 @@
-# Ackermann 26 Vehicle Simulation
+# 🚗 Ackermann 26 Vehicle Simulation
 
 ROS 2 description and Gazebo Sim integration for a small Ackermann-steering vehicle. The workspace contains the robot model, sensor definitions, RViz configuration, a Gazebo world, and a ROS-Gazebo bridge configuration.
 
-## Packages
+## 📦 Packages
 
 | Package | Purpose |
 | --- | --- |
@@ -11,9 +11,9 @@ ROS 2 description and Gazebo Sim integration for a small Ackermann-steering vehi
 
 The active model entry point is `ackermann26_vehicle_description/urdf/mobile_robot.urdf.xacro`. `Backup2.urdf.xacro` is retained as a backup and is not used by the launch files.
 
-## Requirements
+## 🧰 Requirements
 
-- Linux with a sourced ROS 2 installation
+- Linux (Ubuntu) or Windows via WSL2 (WSL2 with GUI support enabled is required for RViz2/Gazebo)
 - `colcon`
 - `xacro`
 - `robot_state_publisher`
@@ -23,7 +23,7 @@ The active model entry point is `ackermann26_vehicle_description/urdf/mobile_rob
 
 The exact ROS 2 distribution is not encoded in this repository. Use a distribution that provides the installed `ros_gz_*` packages and the Gazebo Sim Ackermann steering, sensor, IMU, and joint-state systems used by the model.
 
-## Build
+## 🔨 Build
 
 The repository directory is the workspace `src` directory. Build from its parent:
 
@@ -42,7 +42,7 @@ colcon build --symlink-install \
 source install/setup.bash
 ```
 
-## Run the model in RViz
+## 👁️ Run the model in RViz
 
 This starts `robot_state_publisher`, `joint_state_publisher_gui`, and RViz with `Final_config.rviz`:
 
@@ -52,7 +52,7 @@ ros2 launch ackermann26_vehicle_description display.launch.py
 
 Use the joint-state GUI to move the steering and wheel joints. The model publishes its robot description on `/robot_description` and its TF tree through `robot_state_publisher`.
 
-## Run Gazebo Sim
+## 🌍 Run Gazebo Sim
 
 The standard simulation launch starts Gazebo Sim, publishes the robot description, spawns the vehicle, starts RViz, and loads the configured ROS-Gazebo bridge:
 
@@ -86,7 +86,7 @@ ros2 launch ackermann26_vehicle_gazebo sim.launch.py \
 
 The default `vehicle_world.sdf` contains a 4.0 m by 2.6 m rectangular track with 0.4 m high walls and a 100 m by 100 m ground plane. The walls are intended to be visible to the simulated lidar.
 
-## Driving the vehicle
+## 🎮 Driving the vehicle
 
 The Gazebo Ackermann steering plugin consumes `geometry_msgs/msg/Twist` on `cmd_vel`. For example:
 
@@ -104,11 +104,11 @@ ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist \
 
 The plugin uses the rear wheel joints for drive, the front steering joints for steering, and publishes odometry with `odom` as the parent frame and `base_footprint` as the child frame.
 
-## ROS and Gazebo interfaces
+## 🔌 ROS and Gazebo interfaces
 
 The bridge configuration is in `ackermann26_vehicle_gazebo/config/ros_bridge.yaml`.
 
-### Control and state
+### 🎛️ Control and state
 
 | ROS topic | Type | Direction |
 | --- | --- | --- |
@@ -117,7 +117,7 @@ The bridge configuration is in `ackermann26_vehicle_gazebo/config/ros_bridge.yam
 | `joint_states` | `sensor_msgs/msg/JointState` | Gazebo to ROS |
 | `clock` | `rosgraph_msgs/msg/Clock` | Gazebo to ROS |
 
-### Sensors
+### 📡 Sensors
 
 | ROS topic | Type | Rate / model detail |
 | --- | --- | --- |
@@ -143,7 +143,7 @@ ros2 topic hz /scan
 ros2 topic info /cmd_vel
 ```
 
-## Robot model
+## 🤖 Robot model
 
 The model is built from primitive collision and visual geometry and includes:
 
@@ -169,7 +169,7 @@ Selected dimensions in `vehicle_properties.xacro` are:
 
 The Gazebo Ackermann plugin is configured with a 0.25 m wheel base, 0.17 m wheel separation, 0.033 m wheel radius, 0.5 rad steering limit, and 50 Hz odometry publishing.
 
-## Repository layout
+## 🗂️ Repository layout
 
 ```text
 ackermann26_vehicle_description/
@@ -188,7 +188,7 @@ ackermann26_vehicle_gazebo/
   worlds/vehicle_world.sdf           Default enclosed test world
 ```
 
-## Validate the model
+## ✅ Validate the model
 
 After sourcing the workspace, expand the active Xacro directly:
 
@@ -206,13 +206,13 @@ ros2 topic list
 
 If a sensor topic is missing, check Gazebo Sim plugin availability, the bridge entries in `ros_bridge.yaml`, and the Gazebo-side topic names before changing the ROS topic name.
 
-## Troubleshooting
+## 🛠️ Troubleshooting
 
-### Package or launch file not found
+### 🔎 Package or launch file not found
 
 Build from `/home/nombre_usuario/Workspaces/sm26_ws`, then source both the ROS 2 installation and `install/setup.bash` in the same terminal.
 
-### Gazebo opens but the vehicle does not spawn
+### 🚧 Gazebo opens but the vehicle does not spawn
 
 Check that `robot_state_publisher` is running and that `/robot_description` contains a valid expanded URDF:
 
@@ -222,14 +222,14 @@ ros2 param get /robot_state_publisher robot_description
 
 Also confirm that the selected world exists under `ackermann26_vehicle_gazebo/worlds/`.
 
-### RViz shows no model
+### 🖥️ RViz shows no model
 
 Set RViz's fixed frame to a frame in the published TF tree, typically `base_footprint` or `odom`, and confirm that the RobotModel display uses `/robot_description`.
 
-### Topics exist in Gazebo but not ROS
+### 🔄 Topics exist in Gazebo but not ROS
 
 Compare Gazebo and ROS topic names, then inspect `ackermann26_vehicle_gazebo/config/ros_bridge.yaml`. The bridge uses explicit Gazebo message types, so the installed Gazebo Sim version must provide compatible message and system plugin names.
 
-## License
+## 📄 License
 
 The packages declare the Apache-2.0 license. See the `LICENSE` file in each package for the applicable license text.
